@@ -8,8 +8,8 @@
 %Also ungleich null. Nur wenn dies erfüllt ist, wird der Eintrag Teil der Liste.
 %Am Ende wird die Liste mit dem definierten Inhalt ausgegeben und das Programm evaluiert zu true.
 
-collect_komp(List) :- findall((VORNAME, NAME, GEBOREN, GESTORBEN),			%template
-                      		(komponist(KNR, VORNAME, NAME, GEBOREN, GESTORBEN),		%Goal
-                       		KNR \== null,VORNAME\==null,NAME \== null,GEBOREN\==null,GESTORBEN\==null), %Checklist							
+collect_komp(List) :- findall((Vorname, Name, Geboren, Gestorben),			%template
+                      		(komponist(NR, Vorname, Name, Geboren, Gestorben),		%Goal
+                       		NR\=null,Vorname\=null,Name\=null,Geboren\=null,Gestorben\=null), %Checklist							
                       		List).												%unifies the contents of template with List	
 	
