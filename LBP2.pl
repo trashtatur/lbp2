@@ -1,0 +1,1 @@
+collect_komp([Komponist|Rest]):- 
