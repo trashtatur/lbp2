@@ -2,7 +2,7 @@
 
 test(collect_kompA) :-
     write('collect_komp/1 '),
-    collect_komp([('Georg Friedrich', 'Händel', 1685, 1759),
+    collect_komp([('Georg Friedrich', 'Haendel', 1685, 1759),
                   ('Serge', 'Prokofiev', 1891, 1953),
                   ('Claudio', 'Monteverdi', 1567, 1643),
                   ('Antonin', 'Dvorak', 1841, 1904),
