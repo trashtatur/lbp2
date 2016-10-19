@@ -45,12 +45,13 @@ collect_dp(HListe,Collection):- findall((Name,Hersteller),												%template
 %und gibt diese aus.
 									   
 collect_komp(Solist,Liste) :- findall((Vorname, Name),
-                      		  (solist(_CDNr, Snr, Solist, _Instrument), Snr \= null,
-                       		  % Snr aus Praedikat Solist muss mit Snr aus Praedikat stueck unifizierbar sein. Filterbedingung
+                      		  (komponist(Knr, Vorname, Name, _Geboren, _Gestorben), Name \= null,
+                       		  % Knr aus Praedikat Komponist muss mit Knr aus Praedikat stueck unifizierbar sein. Filterbedingung
                        		  stueck(Snr, Knr, _Titel, _Tonart, _Opus), Knr \= null,
-                       		  % Knr aus Stueck muss mit Knr aus Praedikat komponist unifizierbar sein, Filterbedingung. Anhand
+                  			  % Snr aus Stueck muss mit Snr aus Praedikat solist unifizierbar sein, Filterbedingung. Anhand
                        		  %dessen ermittelt findall dann Vorname und Nachname der jeweils passenden Komponisten.
-                       		  komponist(Knr, Vorname, Name, _Geboren, _Gestorben), Name \= null),
+                       		  %da nur die genommen werden wo die Solisten auch zu den Komponisten passen
+                       		  solist(_CDNr, Snr, Solist, _Instrument), Snr \= null),
                        		  Liste).								   
 									   									
 
