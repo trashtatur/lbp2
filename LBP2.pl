@@ -39,7 +39,7 @@ collect_dp(HListe,Collection):- findall((Name,Hersteller),												%template
 %hierbei muss die Snr mit der Snr des Stückes unifizieren, 
 %dessen Knr wiederum mit der des Komponisten unifizieren muss
 %somit ist gesichert dass der Komponist an dem Stück beteiligt war,
-%an dem der Komponist beteiligt war
+%an dem der Solist beteiligt war
 %findall unifiziert dann alle passenden Komponisten dieser vorangegangenen
 %Bedingung anhand von Vorname und Nachname mit Liste
 %und gibt diese aus.
