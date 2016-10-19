@@ -52,7 +52,19 @@ collect_komp(Solist,Liste) :- findall((Vorname, Name),
                        		  %dessen ermittelt findall dann Vorname und Nachname der jeweils passenden Komponisten.
                        		  %da nur die genommen werden wo die Solisten auch zu den Komponisten passen
                        		  solist(_CDNr, Snr, Solist, _Instrument), Snr \= null),
-                       		  Liste).								   
+                       		  Liste).
+                       		  
+%Teil 1.5
+
+collect_time(Liste) :- findall((Name,Gesamtspielzeit),
+								(cd(CDNr, Name, _Hersteller, _Anz_CDs, Gesamtspielzeit), CDNr\=null, Gesamtspielzeit\=null,
+								 aufnahme(CDNr, SNr, _Orchester, _Leitung), CDNr\=null, SNr\=null,
+								 stueck(SNr, KNr, _Titel, _Tonart, _Opus), SNr\=null, KNr\=null,
+								 komponist(KNr, _Vorname, Name, _Geboren, _Gestorben), KNr\=null, Name\=null),
+								 TempListe).
+								 
+								 %Templiste enthält jetzt die Gesamtspielzeit für einen einzigen Komponisten, einer einzigen CD es werden jedoch mehr gebraucht.
+								 %Die Gesamtspielzeiten dieses einen Komponisten müssen irgendwie akkumuliert werden.                      		  								   
 									   									
 
 	
