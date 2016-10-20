@@ -26,7 +26,7 @@ collect_az(List) :- findall((Vorname,Name,Geboren,Gestorben),											%templat
                       	   
 %Teil 1.3
 
-%Arbeitet wie Teil 1 mit dem findall, nur dass hier das Praedikat member überprüft ob das Element Hersteller ein Teil der uebergebenen Liste HListe ist prüft.
+%Arbeitet wie Teil 1 mit dem findall, nur dass hier das Praedikat member ï¿½berprï¿½ft ob das Element Hersteller ein Teil der uebergebenen Liste HListe ist prï¿½ft.
 
 collect_dp(HListe,Collection):- findall((Name,Hersteller),												%template
 								(cd(CDNr, Name, Hersteller, _Anzahl_CDs, _Gesamtspielzeit),				%Goal
@@ -35,10 +35,9 @@ collect_dp(HListe,Collection):- findall((Name,Hersteller),												%template
 								
 %Teil 1.4
 
-%Die Suche wird umgekehrt begonnen und zwar bei den Solisten.
-%hierbei muss die Snr mit der Snr des Stückes unifizieren, 
+%Es muss die Snr mit der Snr des Stï¿½ckes unifizieren, 
 %dessen Knr wiederum mit der des Komponisten unifizieren muss
-%somit ist gesichert dass der Komponist an dem Stück beteiligt war,
+%somit ist gesichert dass der Komponist an dem Stï¿½ck beteiligt war,
 %an dem der Solist beteiligt war
 %findall unifiziert dann alle passenden Komponisten dieser vorangegangenen
 %Bedingung anhand von Vorname und Nachname mit Liste
@@ -56,15 +55,15 @@ collect_komp(Solist,Liste) :- findall((Vorname, Name),
                        		  
 %Teil 1.5
 
-collect_time(Liste) :- findall((Name,Gesamtspielzeit),
-								(cd(CDNr, Name, _Hersteller, _Anz_CDs, Gesamtspielzeit), CDNr\=null, Gesamtspielzeit\=null,
-								 aufnahme(CDNr, SNr, _Orchester, _Leitung), CDNr\=null, SNr\=null,
-								 stueck(SNr, KNr, _Titel, _Tonart, _Opus), SNr\=null, KNr\=null,
-								 komponist(KNr, _Vorname, Name, _Geboren, _Gestorben), KNr\=null, Name\=null),
-								 TempListe).
+collect_time(Liste) :- findall((Vorname,Name,Gesamtspielzeit),
+								(komponist(KNr, Vorname, Name, _Geboren, _Gestorben), KNr\=null,
+								 stueck(SNr, KNr, _Titel, _Tonart, _Opus), SNr\=null, 
+								 aufnahme(CDNr, SNr, _Orchester, _Leitung), CDNr\=null,
+								 cd(CDNr, _CDName, _Hersteller, _Anz_CDs, Gesamtspielzeit), Gesamtspielzeit\=null),
+								 Liste).
 								 
-								 %Templiste enthält jetzt die Gesamtspielzeit für einen einzigen Komponisten, einer einzigen CD es werden jedoch mehr gebraucht.
-								 %Die Gesamtspielzeiten dieses einen Komponisten müssen irgendwie akkumuliert werden.                      		  								   
-									   									
+								 %Templiste enthï¿½lt jetzt die Gesamtspielzeiten einzeln und listet so jeden Komponisten mehrmals.
+								 %Die Einzelergebnisse mÃ¼ssen jetzt zusammengefasst und als neue Liste ausgegeben werden
+								 %Die das jeweilige akkumulierte Gesamtergebnis enthaelt.
 
 	
