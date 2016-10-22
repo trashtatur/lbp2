@@ -44,26 +44,68 @@ collect_dp(HListe,Collection):- findall((Name,Hersteller),												%template
 %und gibt diese aus.
 									   
 collect_komp(Solist,Liste) :- findall((Vorname, Name),
-                      		  (komponist(Knr, Vorname, Name, _Geboren, _Gestorben), Name \= null,
+                       		  (solist(_CDNr, Snr, Solist, _Instrument), Snr \= null,
                        		  % Knr aus Praedikat Komponist muss mit Knr aus Praedikat stueck unifizierbar sein. Filterbedingung
                        		  stueck(Snr, Knr, _Titel, _Tonart, _Opus), Knr \= null,
                   			  % Snr aus Stueck muss mit Snr aus Praedikat solist unifizierbar sein, Filterbedingung. Anhand
                        		  %dessen ermittelt findall dann Vorname und Nachname der jeweils passenden Komponisten.
                        		  %da nur die genommen werden wo die Solisten auch zu den Komponisten passen
-                       		  solist(_CDNr, Snr, Solist, _Instrument), Snr \= null),
+                      		  komponist(Knr, Vorname, Name, _Geboren, _Gestorben), Name \= null),
                        		  Liste).
                        		  
 %Teil 1.5
+
+%Am Anfang hat collect_time dieselbe Arbeitsweise wie auch 1.4's collect_komp/2 wird aber im späteren Verlauf durchaus
+%komplexer. Die Erklärung folgt in den unteren Kommentaren
 
 collect_time(Liste) :- findall((Vorname,Name,Gesamtspielzeit),
 								(komponist(KNr, Vorname, Name, _Geboren, _Gestorben), KNr\=null,
 								 stueck(SNr, KNr, _Titel, _Tonart, _Opus), SNr\=null, 
 								 aufnahme(CDNr, SNr, _Orchester, _Leitung), CDNr\=null,
 								 cd(CDNr, _CDName, _Hersteller, _Anz_CDs, Gesamtspielzeit), Gesamtspielzeit\=null),
-								 Liste).
-								 
-								 %Templiste enthï¿½lt jetzt die Gesamtspielzeiten einzeln und listet so jeden Komponisten mehrmals.
-								 %Die Einzelergebnisse mÃ¼ssen jetzt zusammengefasst und als neue Liste ausgegeben werden
+								 TempListe),
+								 %Räumt Doppel aus der TempListe die aus irgendeinem Grund entstehen.
+								 list_to_set(TempListe,TempSet),						 
+								 %Templiste enthaelt jetzt die Gesamtspielzeiten einzeln und listet so jeden Komponisten mehrmals.
+								 %Die Einzelergebnisse muessen jetzt zusammengefasst und als neue Liste ausgegeben werden
 								 %Die das jeweilige akkumulierte Gesamtergebnis enthaelt.
-
-	
+								 
+								 %Anwendung der Hilfsprädikate:
+								 
+								 clean_up(TempSet,Liste),!.
+								 
+								 
+			    %Es werden zwei Hilfsprädikate benötigt
+								 
+				%Hilfsprädikat 1
+				%Komprimiert die Liste
+				
+              	clean_up([(Vorname, Name,Gesamtspielzeit)|Rest], [(Vorname, Name,TotalZeit)|Finalrest]) :- %Ruft accu_time auf aktuellem Tupel auf
+              																							   accu_time((Vorname, Name),
+                       																					   [(Vorname, Name,Gesamtspielzeit)|Rest],
+                       																					   AndereKompsListe,TotalZeit),
+                       																			 		   %Rekursionsschritt mit dem Listenrest			
+              																					  		   clean_up(AndereKompsListe,Finalrest).
+              																					  		   %Abbruchbedingung -> Leere Liste
+																							      		   clean_up([],[]).
+																							      
+																							     			
+				%Hilfsprädikat 2
+				%Addiert die Zeiten eines Komponisten auf
+				%(Vorname,Name) mitgeben damit das Attribut bei der Rekursion nicht verloren geht wenn es auf Rest angewendert werden soll
+				
+				accu_time((Vorname,Name),[(Vorname,Name,Gesamtspielzeit)|Rest],AndereKompsListe,TotalZeit) :-  %Rekursionsschritt		
+																							 			accu_time((Vorname,Name),Rest,AndereKompsListe,TempZeit),!,
+																										%Akkumulation der Werte
+																			  							TotalZeit is TempZeit+Gesamtspielzeit.
+																			  							%Abbruchbedingung
+																			  							
+				%Sobald ein anderer Komponist als der aktuelle gefunden wird wird in diesen Fall gewechselt und die Totalzeit wieder auf 0 gesetzt.
+				%Somit ist gewährleistet dass nicht alle Zeiten aller Komponisten zusammenaddiert werden, sondern für jeden Komponisten
+				%Die Zeiten einzeln auf ein Totales addiert werden
+				accu_time((Vorname, Name),[(VornameDiff, NameDiff,Gesamtspielzeit)|Rest],[(VornameDiff, NameDiff,Gesamtspielzeit)|Rest],0) :- Vorname \= VornameDiff,
+																																 		  	  Name \= NameDiff,!.
+																																 		  	  accu_time((_Vorname, _Name),[],[],0).															  							
+																							
+								 
+								 
